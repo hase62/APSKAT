@@ -1,0 +1,97 @@
+#Updated on 14, Jul. 2016. 
+#This R code (aSKAT_func) has two main functions. 
+------------------------------
+
+"aSKAT_bfile" requires PLINK Binary files(header.bed, header.bim, header.fam), 
+a file indicating SNP sets, and the fllowing arguments:
+
+FUNCTION:
+aSKAT_bfile(prefix, SNPSetID, significance_level = 0.05 / 20000, ID = "job", 
+                      n.maxres = 5.0 / (0.05 / 20000), conf_1 = significance_level, 
+					  conf_2 = conf_1, covariate = NA)
+					  
+(1)"prefix" indicates a prefix filename of PLINK Binary files. 
+ (ex.) If one prepares aaa.bed, aaa.bim, and aaa.fam, set as prefix ="aaa". 
+(2)"SNPSetID" indicates a file name including SNP sets. 
+ The 1st and 2nd columns of the file must be set id (e.g., gene names) and snp id, respectively.
+ (ex.) SNPSetID = "snpset.txt"
+ A1CF	rs3829175
+ A1CF	rs3954101
+ A1CF	rs2664679
+ A1CF	rs28653016
+ ABCC2	rs514554
+ ABCC2	rs1867073
+ ABCC2	rs6584164
+ ...	...
+(3)"significance_level" indicates a Bonferroni corrected significance level.
+ (ex.) significance_level = 0.05 / 20000 (default)
+ (ex.) significance_level = 0.5 / #Genes.  
+(4)"Id" is the prefix of intermediate files.
+ job.Info, job.Info.TEMP.txt, job.SSD, and job.SSD_LOG.txt are generated when setting ID = "job".
+ (ex.) ID = "job" (default)
+(5)"n.maxres" is the maximum number of permutation test. 
+ (ex.) n.maxres = 5 / (0.5 / 20000) (default)
+ (ex.) n.maxres = 5 / (0.5 / #Genes)
+(6)"conf_1": When the current estimated p is 0, the adaptive permutation test is finished when the probability of the event 
+   assuming "the true p = significance_level" becomes lower than "conf_1". 
+ (ex.) conf_1 =  significance_level (default)
+(7)"conf_2": When the current estimated p is 1, the adaptive permutation test is finished when the probability of the event 
+   assuming "the true p = significance_level * #Genes" becomes lower than "conf_2". 
+ (ex.) conf_2 =  conf_1 (default)
+(8)"covariate" indicates a file name including covariates for phenotypes. If one do not use it, one should set it as "NA".  
+(ex.) covariate = NA (default). 
+(ex) Sex, Age, and BMI. The first colum must be set IDs used in bfiles. 
+NA19919 0	18	22.2
+NA19916 1	43	25,2
+NA19902 1	34	23.4
+NA19901 1	23	28.1
+NA19908 1	36	19.2
+...	...	...	...
+
+------------------------------
+
+"aSKAT_matrix" requires Genotype Matrix, Phenotype Vector, and the fllowing arguments: 
+
+FUNCTION:
+aSKAT_matrix(geno_matrix, phenotype, significance_level = 0.05 / 20000, ID="job", 
+                      n.maxres = 5.0 / (0.05 / 20000), conf_1 = significance_level, 
+					  conf_2=conf_1, covariate=NA, is_dose=FALSE)
+					  
+(1)"geno_matrix" indicates Genotye Matrix as used in SKAT example, 
+   see Manual(https://cran.r-project.org/web/packages/SKAT/SKAT.pdf) or aSKAT_exe.r. 
+(2)"phenotype" is a phenotype vector. as used in SKAT example, 
+   see Manual(https://cran.r-project.org/web/packages/SKAT/SKAT.pdf) or aSKAT_exe.r. 
+(3)"significance_level" indicates a Bonferroni corrected significance level.
+ (ex.) significance_level = 0.05 / 20000 (default)
+ (ex.) significance_level = 0.5 / #Genes.  
+(4)"Id" is the prefix of intermediate files.
+ job.Info, job.Info.TEMP.txt, job.SSD, and job.SSD_LOG.txt are generated when setting ID = "job".
+ (ex.) ID = "job" (default)
+(5)"n.maxres" is the maximum number of permutation test. 
+ (ex.) n.maxres = 5 / (0.5 / 20000) (default)
+ (ex.) n.maxres = 5 / (0.5 / #Genes)
+(6)"conf_1": When the current estimated p is 0, the adaptive permutation test is finished when the probability of the event 
+   assuming "the true p = significance_level" becomes lower than "conf_1". 
+ (ex.) conf_1 =  significance_level (default)
+(7)"conf_2": When the current estimated p is 1, the adaptive permutation test is finished when the probability of the event 
+   assuming "the true p = significance_level * #Genes" becomes lower than "conf_2". 
+ (ex.) conf_2 =  conf_1 (default)
+(8)"covariate" set a covariate matrix for phenotypes. If one do not use it, one should set as "NA".
+ (ex.) covariate = NA (default). 
+ (ex) In cotrast to the one used in aSKAT_bfiles, one must order a covariate matrix as same as "phenotype". Then, set as
+ 0	18	22.2
+ 1	43	25,2
+ 1	34	23.4
+ 1	23	28.1
+ 1	36	19.2
+ ...	...	...
+(9)"is_dose": Use dosage or not (TRUE/FALSE)
+
+------------------------------
+
+An example is represented in aSKAT_exe.r. 
+
+Note: 
+-Before using aSKAT_func.r, one must install SKAT package by "install.packages("SKAT")".
+-We prepared a test file based on The International HapMap Project (http://hapmap.ncbi.nlm.nih.gov/) for reviewers only. 
+For computational easiness, only SNPs on Ch.10 are extracted for validation. 
