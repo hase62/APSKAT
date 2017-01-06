@@ -1,15 +1,30 @@
-#Updated on 14, Jul. 2016. 
+#Updated on 6, Jan. 2017. 
+------------------------------
 #This R code (aSKAT_func) has two main functions. 
 ------------------------------
 
 "aSKAT_bfile" requires PLINK Binary files(header.bed, header.bim, header.fam), 
 a file indicating SNP sets, and the fllowing arguments:
 
-FUNCTION:
+*If you have vcf files only, please convert vcf to bed files by plink(https://www.cog-genomics.org/plink2). 
+plink -vcf somefile.vcf(.gz) -make-bed -out newfile_prefix
+
+*If you use vcf/bfile, prepare Snpset file from your files. 
+Ex.
+A1CF	rs3829175
+A1CF	rs3954101
+A1CF	rs2664679
+A1CF	rs28653016
+ABCC2	rs514554
+ABCC2	rs1867073
+…
+
+
+-FUNCTION:
 aSKAT_bfile(prefix, SNPSetID, significance_level = 0.05 / 20000, ID = "job", 
                       n.maxres = 5.0 / (0.05 / 20000), conf_1 = significance_level, 
 					  conf_2 = conf_1, covariate = NA)
-					  
+
 (1)"prefix" indicates a prefix filename of PLINK Binary files. 
  (ex.) If one prepares aaa.bed, aaa.bim, and aaa.fam, set as prefix ="aaa". 
 (2)"SNPSetID" indicates a file name including SNP sets. 
@@ -52,7 +67,7 @@ NA19908 1	36	19.2
 
 "aSKAT_matrix" requires Genotype Matrix, Phenotype Vector, and the fllowing arguments: 
 
-FUNCTION:
+-FUNCTION:
 aSKAT_matrix(geno_matrix, phenotype, significance_level = 0.05 / 20000, ID="job", 
                       n.maxres = 5.0 / (0.05 / 20000), conf_1 = significance_level, 
 					  conf_2=conf_1, covariate=NA, is_dose=FALSE)
